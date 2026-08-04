@@ -128,7 +128,10 @@ def profile_group() -> None:
 def profile_list_command(output: str) -> None:
     """List registered profiles."""
 
-    payload = {"profiles": list_profiles()}
+    try:
+        payload = {"profiles": list_profiles()}
+    except RegistryError as exc:
+        _handle_error(exc)
     if output == "text":
         names = [profile["name"] for profile in payload["profiles"]]
         _emit(payload, output=output, text="\n".join(names) if names else "No profiles registered.")
@@ -213,7 +216,10 @@ def session_group() -> None:
 def session_list_command(output: str) -> None:
     """List registered sessions."""
 
-    payload = {"sessions": list_sessions()}
+    try:
+        payload = {"sessions": list_sessions()}
+    except RegistryError as exc:
+        _handle_error(exc)
     if output == "text":
         ids = [session["id"] for session in payload["sessions"]]
         _emit(payload, output=output, text="\n".join(ids) if ids else "No sessions registered.")
@@ -249,7 +255,7 @@ def session_endpoint_command(session_id: str, output: str) -> None:
 
 
 @main.command(name="connect")
-@click.option("--cdp-url", "cdp_url", required=True, help="Existing CDP http(s) endpoint.")
+@click.option("--cdp-url", "cdp_url", required=True, help="Existing localhost http CDP endpoint, for example http://127.0.0.1:9229.")
 @click.option("--as-session-name", "session_id", required=True, help="Local session name to register.")
 @click.option("--profile", "profile", default=None, help="Optional registered profile alias.")
 @click.option("--output", "output", default="text", show_default=True, type=OUTPUT_CHOICES)

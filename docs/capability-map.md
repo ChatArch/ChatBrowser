@@ -12,7 +12,7 @@
 
 - **Profile 元数据**
 
-    登记 profile alias、路径、默认 backend 和 labels；profile 是浏览器状态容器，不等于平台账号。
+    登记 profile alias、路径、默认 backend 和非敏感 labels；profile 是浏览器状态容器，不等于平台账号。
 
 - **Session endpoint**
 
@@ -20,7 +20,7 @@
 
 - **配置与环境**
 
-    通过 ChatEnv 提供 `CHATBROWSER_DEFAULT_BACKEND` 与 `CHATBROWSER_REGISTRY_HOME` schema；默认 metadata 存在 ChatArch home 下。
+    通过 ChatEnv 提供 `CHATBROWSER_DEFAULT_BACKEND` 与 `CHATBROWSER_REGISTRY_HOME` schema；默认 metadata 存在 ChatArch home 下，设置 `CHATBROWSER_REGISTRY_HOME` 时它会作为 ChatBrowser metadata root 直接使用。
 
 </div>
 
@@ -45,6 +45,8 @@
 
 ## 安全边界
 
-- 对外 JSON/text 默认只包含 metadata、路径、backend 名称、CDP URL 和 session id。
+- 对外 JSON/text 默认只包含 metadata、路径、backend 名称、经校验的本机 CDP URL 和 session id。
+- CDP URL 只允许本机 HTTP endpoint，不允许 userinfo、path、query 或 fragment，避免 token/credential 被登记和回显。
+- Profile labels 会拒绝 `token`、`password`、`cookie`、`account`、`api_key`、`auth`、`login`、`session` 等敏感 key。
 - `disconnect` 只删除本地 registry 记录，不杀进程、不关闭外部浏览器。
 - 同一 profile 不应在多台机器上同时写入；迁移 profile 目录应由显式后续命令或上层 workflow 处理。

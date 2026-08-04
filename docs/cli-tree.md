@@ -57,7 +57,7 @@ chatbrowser profile path <name> [--kind root|downloads|logs|run]
 chatbrowser profile status <name> --output text|json
 ```
 
-profile 是浏览器状态容器的别名和路径登记，不等于某个平台账号。ChatBrowser 只保存非敏感元数据：名称、路径、默认 backend、labels 和时间戳。
+profile 是浏览器状态容器的别名和路径登记，不等于某个平台账号。ChatBrowser 只保存非敏感元数据：名称、路径、默认 backend、非敏感 labels 和时间戳；敏感 label key 会被拒绝。
 
 ## connect / disconnect
 
@@ -71,7 +71,7 @@ chatbrowser connect \
 chatbrowser disconnect <session-id> --output text|json
 ```
 
-`connect` 只登记已有本机 loopback CDP endpoint（`http://127.0.0.1:<port>` / `http://localhost:<port>` / IPv6 localhost），`owned=false`；`disconnect` 只删除 ChatBrowser 本地 session 记录，不关闭外部浏览器。
+`connect` 只登记已有本机 loopback CDP endpoint（`http://127.0.0.1:<port>` / `http://localhost:<port>` / IPv6 localhost；不允许 userinfo、path、query 或 fragment），`owned=false`；`disconnect` 只删除 ChatBrowser 本地 session 记录，不关闭外部浏览器。
 
 ## session
 

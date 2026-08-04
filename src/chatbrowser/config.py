@@ -24,7 +24,7 @@ class ChatbrowserConfig(BaseEnvConfig):
     )
     CHATBROWSER_REGISTRY_HOME = EnvField(
         "CHATBROWSER_REGISTRY_HOME",
-        desc="Optional ChatBrowser metadata root override; normally leave unset to use ChatArch home",
+        desc="Optional ChatBrowser metadata root override; normally leave unset to use ChatArch home / chatbrowser",
     )
 
 
