@@ -17,7 +17,7 @@
 
 # ChatBrowser
 
-ChatBrowser: ChatArch browser runtime and artifact identity package
+ChatBrowser is the ChatArch browser runtime and artifact identity package. The first release fixes the package identity, CLI entry point, Python import surface, and ChatEnv discovery hook so later browser runtime capabilities have a stable installation surface.
 
 
 Documentation entry: <https://arch.gh.wzhecnu.cn/ChatBrowser/en/>
@@ -33,9 +33,15 @@ Choose documentation by scenario:
 ## Quick Start
 
 ```bash
-pip install -e ".[dev]"
+pip install ChatBrowser
 chatbrowser --help
 chatbrowser --version
+```
+
+Development checks:
+
+```bash
+pip install -e ".[dev,docs]"
 python -m pytest -q
 python -m build
 ```

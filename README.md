@@ -17,7 +17,7 @@
 
 # ChatBrowser
 
-ChatBrowser: ChatArch browser runtime and artifact identity package
+ChatBrowser 是 ChatArch 的浏览器运行时与 artifact identity 包。当前首发版本先固定包身份、CLI 入口、Python import 面和 ChatEnv 配置发现入口，为后续浏览器运行时能力提供稳定安装面。
 
 
 文档入口：<https://arch.gh.wzhecnu.cn/ChatBrowser/>
@@ -33,9 +33,15 @@ ChatBrowser: ChatArch browser runtime and artifact identity package
 ## 快速开始
 
 ```bash
-pip install -e ".[dev]"
+pip install ChatBrowser
 chatbrowser --help
 chatbrowser --version
+```
+
+开发验证：
+
+```bash
+pip install -e ".[dev,docs]"
 python -m pytest -q
 python -m build
 ```

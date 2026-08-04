@@ -16,7 +16,7 @@ Use this page to check which first-class capabilities `ChatBrowser` currently ow
 
 - **Config and Environment**
 
-    ChatEnv integration is enabled by default; stable, shared configuration belongs in `config.py`.
+    ChatEnv integration is enabled; future browser runtime settings that need stable storage should live in `config.py`.
 
 </div>
 
@@ -25,11 +25,11 @@ Use this page to check which first-class capabilities `ChatBrowser` currently ow
 | Capability | Status | Notes |
 | --- | --- | --- |
 | CLI base entry | Implemented | The template generates a Click group, `--version`, and a base test. |
-| ChatEnv provider | Implemented | The template generates `config.py` and a `chatenv.configs` entry point. |
-| Business commands | Not implemented | Add these from the real package domain; do not fake future commands in the template. |
+| Python package identity | Implemented | The `ChatBrowser` PyPI project, `chatbrowser` module, and `chatbrowser` CLI entry point are aligned. |
+| ChatEnv provider | Implemented | The package exposes `config.py` and a `chatenv.configs` entry point for future configuration fields. |
+| Browser runtime business commands | Not implemented | Add these only when real runtime capabilities exist; do not fake future commands. |
 
 ## Out of Scope
 
-- No plan placeholder page is generated.
 - No unimplemented capability should be written as a user operation tutorial.
 - No secret, token, cookie, or Authorization header should appear in README, docs, issues, PR comments, or CI logs.

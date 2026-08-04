@@ -1,6 +1,6 @@
 # ChatBrowser 文档
 
-ChatBrowser 是 ChatArch 系列 Python 包。这个文档站提供长期维护的使用说明、CLI 树、能力地图和 Python 接口入口。生成模板后，请把占位说明替换为当前包已经实现、探索过或计划中的真实内容。
+ChatBrowser 是 ChatArch 的浏览器运行时与 artifact identity 包。当前首发版本固定 PyPI 包名、`chatbrowser` CLI 入口、Python import 面和 ChatEnv 配置发现入口；浏览器运行时的具体自动化命令会在后续版本中按真实能力补充。
 
 站点入口：<https://arch.gh.wzhecnu.cn/ChatBrowser/>
 
@@ -14,9 +14,9 @@ ChatBrowser 是 ChatArch 系列 Python 包。这个文档站提供长期维护�
 
 ## 文档栏目组织
 
-当前模板只保留长期有用的文档入口，不生成计划类占位页：
+当前文档只记录已经存在的入口和边界：
 
-- **CLI 树**：最直观的命令展示入口，包含真实命令树、状态和更新清单。
+- **CLI 树**：最直观的命令展示入口，当前包含 `--help` 与 `--version`。
 - **能力地图**：当前一等能力、边界和不负责的范围。
 - **接口树**：命令行背后的可 import Python 接口。
 
@@ -32,7 +32,7 @@ ChatBrowser 是 ChatArch 系列 Python 包。这个文档站提供长期维护�
 
 - **能力地图**
 
-    用于 review 当前包的能力边界，避免把规划写成已实现功能。
+    用于 review 当前包的能力边界，避免把浏览器自动化规划写成已实现功能。
 
     [查看能力地图](capability-map.md)
 

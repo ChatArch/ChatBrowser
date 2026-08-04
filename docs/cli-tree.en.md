@@ -1,6 +1,6 @@
 # CLI Capability Map
 
-This page is the compact capability map for the `ChatBrowser` CLI. Use it to review which commands are first-class entries and which are still boundary or planned slots. After scaffolding, update it with the real command tree; do not present unimplemented commands as available operations.
+This page is the compact capability map for the `ChatBrowser` CLI. Use it to review which commands are first-class entries and which are still boundaries or plans. The current release ships only the base identity entries and does not present unimplemented browser automation commands as available operations.
 
 Importable Python functions are mapped in [Interface Tree](interface-tree.md). Current package boundaries are tracked in [Capability Map](capability-map.md).
 
@@ -19,17 +19,15 @@ chatbrowser --help           # Verify the command is installed and inspect the c
 chatbrowser --version        # Verify the installed version
 ```
 
-`--help` and `--version` are the scaffolded verification entries. After adding business commands, follow the ChatTea CLI tree pattern: split command groups into their own sections and annotate every command line.
+`--help` and `--version` are the current verification entries. After adding business commands, follow the ChatTea CLI tree pattern: split command groups into their own sections and annotate every command line.
 
-## Business Command Slots
+## Unimplemented Business Commands
 
 ```text
-chatbrowser <group>          # Command group named after real package capability
-├── <command>                  # Explain what this command does
-└── <command>                  # Explain status, boundary, or checkpoint behavior
+chatbrowser <browser-command> # Not implemented yet; add it only with real browser runtime capability
 ```
 
-This is a structural placeholder, not a promise of future capability. Only document a command as implemented after the command, Python function, and tests exist.
+This is not a promise of future capability. Only document a command as implemented after the command, Python function, and tests exist.
 
 ## Status Contract
 
