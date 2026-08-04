@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.2
+
+### Fixed
+
+- Reject CDP URLs containing userinfo, query strings, fragments, paths, malformed ports, or out-of-range ports before registry persistence.
+- Convert malformed registry JSON into clean CLI errors instead of Python tracebacks.
+- Reject sensitive profile label keys such as token, password, cookie, account, API key, auth, login, and session.
+- Honor `CHATBROWSER_REGISTRY_HOME` as a direct ChatBrowser metadata root override.
+- Clarify `connect --cdp-url` help as localhost HTTP only.
+
 ## 0.1.1
 
 ### Added

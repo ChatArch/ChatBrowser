@@ -12,7 +12,7 @@ Use this page to check which first-class capabilities `ChatBrowser` currently ow
 
 - **Profile Metadata**
 
-    Register profile aliases, paths, default backends, and labels. A profile is a browser-state container, not a platform account.
+    Register profile aliases, paths, default backends, and non-sensitive labels. A profile is a browser-state container, not a platform account.
 
 - **Session Endpoint**
 
@@ -20,7 +20,7 @@ Use this page to check which first-class capabilities `ChatBrowser` currently ow
 
 - **Config and Environment**
 
-    Expose ChatEnv schema fields for `CHATBROWSER_DEFAULT_BACKEND` and `CHATBROWSER_REGISTRY_HOME`; metadata defaults to ChatArch home.
+    Expose ChatEnv schema fields for `CHATBROWSER_DEFAULT_BACKEND` and `CHATBROWSER_REGISTRY_HOME`; metadata defaults to ChatArch home, and `CHATBROWSER_REGISTRY_HOME` is used directly as the ChatBrowser metadata root when set.
 
 </div>
 
@@ -45,6 +45,8 @@ Use this page to check which first-class capabilities `ChatBrowser` currently ow
 
 ## Safety Boundary
 
-- Text/JSON outputs contain metadata, paths, backend names, CDP URLs, and session IDs by default.
+- Text/JSON outputs contain metadata, paths, backend names, validated local CDP URLs, and session IDs by default.
+- CDP URLs must be local HTTP endpoints and must not include userinfo, paths, query strings, or fragments, so tokens/credentials are not persisted and echoed.
+- Profile labels reject sensitive keys such as `token`, `password`, `cookie`, `account`, `api_key`, `auth`, `login`, and `session`.
 - `disconnect` only removes a local registry record; it does not terminate processes or close external browsers.
 - Do not write the same profile from multiple machines at the same time; profile migration should be handled by explicit future commands or upper-layer workflows.

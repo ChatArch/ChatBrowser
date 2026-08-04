@@ -57,7 +57,7 @@ chatbrowser profile path <name> [--kind root|downloads|logs|run]
 chatbrowser profile status <name> --output text|json
 ```
 
-A profile is an alias and path registration for a browser-state container. It is not a platform account. ChatBrowser stores only non-sensitive metadata: name, path, default backend, labels, and timestamps.
+A profile is an alias and path registration for a browser-state container. It is not a platform account. ChatBrowser stores only non-sensitive metadata: name, path, default backend, non-sensitive labels, and timestamps; sensitive label keys are rejected.
 
 ## connect / disconnect
 
@@ -71,7 +71,7 @@ chatbrowser connect \
 chatbrowser disconnect <session-id> --output text|json
 ```
 
-`connect` only registers an existing local loopback CDP endpoint (`http://127.0.0.1:<port>`, `http://localhost:<port>`, or IPv6 localhost) with `owned=false`; `disconnect` removes ChatBrowser's local session record and does not close external browsers.
+`connect` only registers an existing local loopback CDP endpoint (`http://127.0.0.1:<port>`, `http://localhost:<port>`, or IPv6 localhost; userinfo, paths, query strings, and fragments are rejected) with `owned=false`; `disconnect` removes ChatBrowser's local session record and does not close external browsers.
 
 ## session
 

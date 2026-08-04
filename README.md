@@ -30,7 +30,7 @@ Wechatsync   = platform adapter / auth check / draft write
 ChatPost     = post/task orchestration / multi-platform publishing workflow
 ```
 
-ChatBrowser 不读取、打印或迁移平台账号数据；profile 目录里的浏览器状态由浏览器自己维护。
+ChatBrowser 不读取、打印或迁移平台账号数据；profile 目录里的浏览器状态由浏览器自己维护。`--label` 只能保存非敏感标签键值，`token`、`password`、`cookie`、`account`、`api_key`、`auth`、`login`、`session` 等敏感 key 会被拒绝。
 
 ## 快速开始
 
@@ -53,7 +53,7 @@ chatbrowser profile show zhihu-test --output json
 chatbrowser profile path zhihu-test
 ```
 
-接入一个已经运行的本机 loopback CDP endpoint（只接受 `http://127.0.0.1:<port>` / `http://localhost:<port>` / IPv6 localhost），不接管也不关闭该浏览器：
+接入一个已经运行的本机 loopback CDP endpoint（只接受不含 userinfo/path/query/fragment 的 `http://127.0.0.1:<port>` / `http://localhost:<port>` / IPv6 localhost），不接管也不关闭该浏览器：
 
 ```bash
 chatbrowser connect \

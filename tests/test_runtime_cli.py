@@ -175,6 +175,89 @@ def test_invalid_profile_name_and_cdp_url_fail_with_nonzero_exit(tmp_path):
     assert "not registered" in missing_profile.output.lower()
 
 
+def test_cdp_url_rejects_credentials_query_fragments_and_bad_ports(tmp_path):
+    env = {"CHATARCH_HOME": str(tmp_path / "chatarch-home")}
+    bad_urls = [
+        "http://user:password@127.0.0.1:9229",
+        "http://127.0.0.1:9229?token=secret",
+        "http://127.0.0.1:9229/#fragment",
+        "http://127.0.0.1:abc",
+        "http://127.0.0.1:99999",
+    ]
+
+    for index, url in enumerate(bad_urls):
+        result = invoke(
+            "connect",
+            "--cdp-url",
+            url,
+            "--as-session-name",
+            f"bad-session-{index}",
+            "--output",
+            "json",
+            env=env,
+        )
+        assert result.exit_code != 0, url
+        assert "traceback" not in result.output.lower()
+        assert "cdp url" in result.output.lower() or "localhost" in result.output.lower()
+
+    registry = tmp_path / "chatarch-home" / "chatbrowser" / "registry.json"
+    if registry.exists():
+        assert "password" not in registry.read_text(encoding="utf-8")
+        assert "token=secret" not in registry.read_text(encoding="utf-8")
+
+
+def test_profile_labels_reject_sensitive_keys(tmp_path):
+    env = {"CHATARCH_HOME": str(tmp_path / "chatarch-home")}
+
+    for key in ["token", "password", "account", "cookie", "api_key"]:
+        result = invoke(
+            "profile",
+            "create",
+            f"profile-{key.replace('_', '-')}",
+            "--label",
+            f"{key}=secret-value",
+            "--output",
+            "json",
+            env=env,
+        )
+        assert result.exit_code != 0, key
+        assert "sensitive" in result.output.lower()
+        assert "secret-value" not in result.output
+
+
+def test_corrupt_registry_json_fails_without_traceback(tmp_path):
+    home = tmp_path / "chatarch-home"
+    registry = home / "chatbrowser" / "registry.json"
+    registry.parent.mkdir(parents=True)
+    registry.write_text("{not json", encoding="utf-8")
+    env = {"CHATARCH_HOME": str(home)}
+
+    for args in [("profile", "list", "--output", "json"), ("session", "list", "--output", "json")]:
+        result = invoke(*args, env=env)
+        assert result.exit_code != 0
+        assert "registry" in result.output.lower()
+        assert "traceback" not in result.output.lower()
+
+
+def test_chatbrowser_registry_home_overrides_chatarch_home(tmp_path):
+    chatarch_home = tmp_path / "chatarch-home"
+    registry_home = tmp_path / "custom-registry-root"
+    env = {"CHATARCH_HOME": str(chatarch_home), "CHATBROWSER_REGISTRY_HOME": str(registry_home)}
+
+    parse_json_output(
+        invoke(
+            "profile",
+            "create",
+            "zhihu-test",
+            "--output",
+            "json",
+            env=env,
+        )
+    )
+
+    assert (registry_home / "registry.json").exists()
+    assert not (chatarch_home / "chatbrowser" / "registry.json").exists()
+
 
 def test_profile_cookie_terms_are_not_exposed_in_help():
     result = invoke("profile", "--help")

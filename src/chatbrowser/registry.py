@@ -13,6 +13,10 @@ from .paths import default_profile_root, registry_path, runtime_home
 
 
 _NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$")
+_SENSITIVE_LABEL_KEY_RE = re.compile(
+    r"(token|password|passwd|secret|cookie|session|account|credential|auth|api[_-]?key|login)",
+    re.IGNORECASE,
+)
 
 
 @dataclass
@@ -72,7 +76,10 @@ def load_registry(home: str | Path | None = None) -> dict[str, dict[str, dict[st
     path = registry_path(home)
     if not path.exists():
         return _empty_registry()
-    data = json.loads(path.read_text(encoding="utf-8"))
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise RegistryError(f"Registry file {path} contains invalid JSON.") from exc
     if not isinstance(data, dict):
         raise RegistryError("Registry file must contain a JSON object.")
     data.setdefault("profiles", {})
@@ -100,6 +107,10 @@ def parse_labels(items: tuple[str, ...] | list[str]) -> dict[str, str]:
             raise RegistryError(f"Invalid label {item!r}; expected key=value.")
         key, value = item.split("=", 1)
         validate_name(key, field="label key")
+        if _SENSITIVE_LABEL_KEY_RE.search(key):
+            raise RegistryError(
+                f"Label key {key!r} is sensitive; labels must store only non-sensitive metadata."
+            )
         labels[key] = value
     return labels
 
@@ -187,12 +198,21 @@ def validate_cdp_url(cdp_url: str) -> str:
     parsed = urlparse(cdp_url)
     if parsed.scheme != "http" or not parsed.netloc:
         raise RegistryError("CDP URL must be a localhost http URL, for example http://127.0.0.1:9229.")
+    if parsed.username or parsed.password:
+        raise RegistryError("CDP URL must not include credentials or userinfo.")
+    if parsed.path not in {"", "/"} or parsed.params or parsed.query or parsed.fragment:
+        raise RegistryError("CDP URL must not include a path, query string, or fragment.")
     host = parsed.hostname
     if host not in {"127.0.0.1", "localhost", "::1"}:
         raise RegistryError("CDP URL must point to localhost / 127.0.0.1 / ::1, not a remote host.")
-    if parsed.port is None:
+    try:
+        port = parsed.port
+    except ValueError as exc:
+        raise RegistryError("CDP URL must include a valid localhost port from 1 to 65535.") from exc
+    if port is None:
         raise RegistryError("CDP URL must include a localhost port, for example http://127.0.0.1:9229.")
-    return cdp_url.rstrip("/")
+    host_for_url = f"[{host}]" if ":" in host else host
+    return f"http://{host_for_url}:{port}"
 
 
 def connect_session(

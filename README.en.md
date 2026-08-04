@@ -30,7 +30,7 @@ Wechatsync   = platform adapter / auth check / draft write
 ChatPost     = post/task orchestration / multi-platform publishing workflow
 ```
 
-ChatBrowser does not read, print, or migrate platform account data; browser state inside profile directories remains owned by the browser.
+ChatBrowser does not read, print, or migrate platform account data; browser state inside profile directories remains owned by the browser. `--label` accepts only non-sensitive metadata keys; sensitive keys such as `token`, `password`, `cookie`, `account`, `api_key`, `auth`, `login`, and `session` are rejected.
 
 ## Quick Start
 
@@ -53,7 +53,7 @@ chatbrowser profile show zhihu-test --output json
 chatbrowser profile path zhihu-test
 ```
 
-Attach an already-running local loopback CDP endpoint (`http://127.0.0.1:<port>`, `http://localhost:<port>`, or IPv6 localhost) without taking ownership of the browser:
+Attach an already-running local loopback CDP endpoint (`http://127.0.0.1:<port>`, `http://localhost:<port>`, or IPv6 localhost, with no userinfo, path, query string, or fragment) without taking ownership of the browser:
 
 ```bash
 chatbrowser connect \
