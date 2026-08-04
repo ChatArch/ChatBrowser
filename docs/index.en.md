@@ -1,6 +1,6 @@
 # ChatBrowser Docs
 
-ChatBrowser is the ChatArch browser runtime and artifact identity package. The first release fixes the PyPI package name, `chatbrowser` CLI entry point, Python import surface, and ChatEnv discovery hook. Concrete browser runtime automation commands will be added in later versions only after the underlying capability exists.
+ChatBrowser is the ChatArch browser runtime foundation package. It provides browser backend discovery, profile metadata registry, local loopback CDP endpoint registration, and session endpoint lookup. It does not install system dependencies, determine platform accounts, or create publishing drafts.
 
 Site entry: <https://arch.gh.wzhecnu.cn/ChatBrowser/en/>
 
@@ -8,17 +8,18 @@ Site entry: <https://arch.gh.wzhecnu.cn/ChatBrowser/en/>
 
 | Scenario | Document |
 | --- | --- |
-| Install the package, run the CLI, and confirm it works | [CLI Tree](cli-tree.md) |
+| Inspect the real command tree, JSON output, and session endpoint flow | [CLI Tree](cli-tree.md) |
 | Check first-class capabilities and current boundaries | [Capability Map](capability-map.md) |
-| Call package behavior directly from Python | [Python Interface Tree](interface-tree.md) |
+| Call profile/session/backend behavior directly from Python | [Python Interface Tree](interface-tree.md) |
 
-## Documentation Organization
+## Role Boundaries
 
-The documentation records existing entry points and boundaries:
-
-- **CLI tree**: the most direct command entry point; it currently includes `--help` and `--version`.
-- **Capability map**: first-class capabilities, boundaries, and out-of-scope areas.
-- **Interface tree**: importable Python APIs behind the CLI.
+```text
+ChatUp       = setup / install / configure
+ChatBrowser  = browser backend / profile metadata / session endpoint / CDP registry
+Wechatsync   = platform adapter / auth check / draft write
+ChatPost     = post/task orchestration / multi-platform publishing workflow
+```
 
 ## Primary Entry Points
 
@@ -26,13 +27,13 @@ The documentation records existing entry points and boundaries:
 
 - **CLI Tree**
 
-    Start from the CLI entry point and record implemented commands, command status, and interactive conventions.
+    Start from the CLI entry point and record implemented commands, command status, and integration flows.
 
     [Open CLI Tree](cli-tree.md)
 
 - **Capability Map**
 
-    Review current package boundaries and avoid presenting future browser automation work as implemented behavior.
+    Review current package boundaries and keep platform-account semantics and setup responsibilities out of ChatBrowser.
 
     [Open Capability Map](capability-map.md)
 
@@ -44,12 +45,6 @@ The documentation records existing entry points and boundaries:
 
 </div>
 
-## Documentation Status
-
-- **Implemented**: code, tests, or CLI routes exist.
-- **Verified**: covered by local smoke, CI, or real-service practice.
-- **Not implemented**: keep as boundary and planning notes only; turn into operation docs after implementation and validation.
-
 ## Local Preview
 
 ```bash
@@ -57,4 +52,4 @@ python -m pip install -e ".[docs]"
 mkdocs serve
 ```
 
-The Chinese home page is available at <https://arch.gh.wzhecnu.cn/ChatBrowser/>. Topic pages without English translations fall back to the default Chinese content through the i18n plugin.
+The Chinese home page is available at <https://arch.gh.wzhecnu.cn/ChatBrowser/>.

@@ -12,57 +12,90 @@
 
 <div align="center">
 
-[英文版](README.en.md) | [简体中文](README.md)
+[English](README.en.md) | [简体中文](README.md)
 </div>
 
 # ChatBrowser
 
-ChatBrowser 是 ChatArch 的浏览器运行时与 artifact identity 包。当前首发版本先固定包身份、CLI 入口、Python import 面和 ChatEnv 配置发现入口，为后续浏览器运行时能力提供稳定安装面。
-
+ChatBrowser 是 ChatArch 的浏览器运行态基础包。它不做平台账号语义，也不安装系统依赖；它只管理浏览器 backend 探测、profile 元数据、本机 loopback CDP endpoint 注册和 session endpoint 读取，供 ChatPost、Wechatsync 等上层发布工具复用。
 
 文档入口：<https://arch.gh.wzhecnu.cn/ChatBrowser/>
 
-按场景选择文档：
+## 边界
 
-| 场景 | 文档 |
-| --- | --- |
-| 第一次安装、运行命令行、确认包可用 | [CLI 树](docs/cli-tree.md) |
-| 校对当前包有哪些一等能力和边界 | [能力地图](docs/capability-map.md) |
-| 从 Python 代码调用包能力 | [接口树](docs/interface-tree.md) |
+```text
+ChatUp       = setup / install / configure
+ChatBrowser  = browser backend / profile metadata / session endpoint / CDP registry
+Wechatsync   = platform adapter / auth check / draft write
+ChatPost     = post/task orchestration / multi-platform publishing workflow
+```
+
+ChatBrowser 不读取、打印或迁移平台账号数据；profile 目录里的浏览器状态由浏览器自己维护。
 
 ## 快速开始
 
 ```bash
 pip install ChatBrowser
 chatbrowser --help
-chatbrowser --version
+chatbrowser doctor --output json
+chatbrowser backend list --output json
 ```
 
-开发验证：
+注册一个已有浏览器 profile 目录：
+
+```bash
+chatbrowser profile create zhihu-test \
+  --path /path/to/browser-profile \
+  --backend chrome-for-testing \
+  --output json
+
+chatbrowser profile show zhihu-test --output json
+chatbrowser profile path zhihu-test
+```
+
+接入一个已经运行的本机 loopback CDP endpoint（只接受 `http://127.0.0.1:<port>` / `http://localhost:<port>` / IPv6 localhost），不接管也不关闭该浏览器：
+
+```bash
+chatbrowser connect \
+  --cdp-url http://127.0.0.1:9229 \
+  --as-session-name zhihu-test-existing \
+  --profile zhihu-test \
+  --output json
+
+chatbrowser session endpoint zhihu-test-existing
+chatbrowser disconnect zhihu-test-existing
+```
+
+## 当前 CLI
+
+```text
+chatbrowser
+├── doctor
+├── backend
+│   ├── list
+│   ├── show <name>
+│   └── resolve <name>
+├── profile
+│   ├── list
+│   ├── create <name>
+│   ├── show <name>
+│   ├── path <name>
+│   └── status <name>
+├── connect
+├── disconnect <session-id>
+└── session
+    ├── list
+    ├── show <session-id>
+    └── endpoint <session-id>
+```
+
+## 开发检查
 
 ```bash
 pip install -e ".[dev,docs]"
 python -m pytest -q
 python -m build
+mkdocs build --strict
 ```
 
-## 命令行规范
-
-这个模板默认依赖 `chatstyle>=0.1.0,<0.2.0` 和 `chatenv>=0.2.0,<0.3.0`，新增命令应优先使用：
-
-- `CommandSchema` / `CommandField` 描述输入。
-- `add_interactive_option()` 提供统一 `-i/-I`。
-- `resolve_command_inputs()` 统一缺参补问、默认值、TTY 与校验。
-- 默认生成 `config.py` 和 `chatenv.configs` 入口点，使包可被 ChatEnv 发现；只有明确不需要 ChatEnv 接入时才使用 `--without-chatenv-provider`。
-
-## 目录结构
-
-- `src/`：包源码
-- `tests/code-tests/`：代码测试和历史测试迁移
-- `tests/cli-tests/`：真实 CLI 测试，doc-first
-- `tests/mock-cli-tests/`：mock/fake CLI 测试，doc-first
-- `docs/`：长期维护文档，由 mkdocs 构建
-
-## 开发说明
-
-扩展脚手架前，先阅读 `DEVELOP.md` 和 `AGENTS.md`。
+新增命令时保持 CLI 是薄封装：核心逻辑先放进可 import Python API，再让 Click 命令调用它。

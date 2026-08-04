@@ -1,44 +1,92 @@
-# CLI Capability Map
+# CLI Tree
 
-This page is the compact capability map for the `ChatBrowser` CLI. Use it to review which commands are first-class entries and which are still boundaries or plans. The current release ships only the base identity entries and does not present unimplemented browser automation commands as available operations.
+`chatbrowser` is the browser runtime metadata CLI. It discovers browser backends, registers profiles, registers local loopback CDP endpoints, and exposes session endpoints to higher-level tools. It does not own platform-account semantics and does not install dependencies.
 
-Importable Python functions are mapped in [Interface Tree](interface-tree.md). Current package boundaries are tracked in [Capability Map](capability-map.md).
+Importable APIs are mapped in [Interface Tree](interface-tree.md). Package boundaries are tracked in [Capability Map](capability-map.md).
 
-## Top-Level Commands
+## Top Level
 
 ```text
 chatbrowser                  # ChatBrowser command-line entry
-├── --help                     # Show CLI help and registered commands
-└── --version                  # Print the current package version
+├── --help                   # Show CLI help and registered commands
+├── --version                # Print the package version
+├── doctor                   # Read-only package and dependency check
+├── backend                  # Discover local browser backends
+├── profile                  # Manage isolated browser profile metadata
+├── connect                  # Register an existing local loopback CDP endpoint without taking ownership
+├── disconnect               # Remove a local session record without closing external browsers
+└── session                  # Read registered browser sessions
 ```
 
-## Base Entries
+## doctor
+
+```bash
+chatbrowser doctor --output text|json
+```
+
+`doctor` is read-only. It reports the package version, ChatBrowser metadata home, `chatup` / `chatstyle` / `chatenv` dependency versions, and `installs_dependencies=false` to make the setup boundary explicit.
+
+## backend
 
 ```text
-chatbrowser --help           # Verify the command is installed and inspect the current command tree
-chatbrowser --version        # Verify the installed version
+chatbrowser backend list --output text|json
+chatbrowser backend show <name> --output text|json
+chatbrowser backend resolve <name> --output text|json
 ```
 
-`--help` and `--version` are the current verification entries. After adding business commands, follow the ChatTea CLI tree pattern: split command groups into their own sections and annotate every command line.
+Known backend names:
 
-## Unimplemented Business Commands
+- `chrome-for-testing`
+- `chromium`
+- `chrome`
+- `edge`
+
+These commands only inspect `PATH`; they do not install browsers. Missing backends should be handled by ChatUp or manual setup.
+
+## profile
 
 ```text
-chatbrowser <browser-command> # Not implemented yet; add it only with real browser runtime capability
+chatbrowser profile list --output text|json
+chatbrowser profile create <name> \
+  [--path <profile-dir>] \
+  [--backend chrome-for-testing] \
+  [--label key=value] \
+  [--output text|json]
+chatbrowser profile show <name> --output text|json
+chatbrowser profile path <name> [--kind root|downloads|logs|run]
+chatbrowser profile status <name> --output text|json
 ```
 
-This is not a promise of future capability. Only document a command as implemented after the command, Python function, and tests exist.
+A profile is an alias and path registration for a browser-state container. It is not a platform account. ChatBrowser stores only non-sensitive metadata: name, path, default backend, labels, and timestamps.
+
+## connect / disconnect
+
+```text
+chatbrowser connect \
+  --cdp-url http://127.0.0.1:9229 \
+  --as-session-name <session-id> \
+  [--profile <profile-name>] \
+  [--output text|json]
+
+chatbrowser disconnect <session-id> --output text|json
+```
+
+`connect` only registers an existing local loopback CDP endpoint (`http://127.0.0.1:<port>`, `http://localhost:<port>`, or IPv6 localhost) with `owned=false`; `disconnect` removes ChatBrowser's local session record and does not close external browsers.
+
+## session
+
+```text
+chatbrowser session list --output text|json
+chatbrowser session show <session-id> --output text|json
+chatbrowser session endpoint <session-id> --output text|json
+```
+
+`session endpoint` is the main integration point for upper layers such as ChatPost and Wechatsync.
 
 ## Status Contract
 
 | Status | Meaning |
 | --- | --- |
-| Implemented | Command, function, and tests exist |
-| Verified | Covered by CI, local smoke, or real-service practice |
-| Planned / checkpoint | Keep only boundary notes; do not write operation tutorials before implementation |
-
-## Implementation Contract
-
-- Every implemented command must map back to a Python function, class, or service layer.
-- If a command writes remote state, document credentials, permissions, dry-run/checkpoint behavior, or confirmation boundaries.
-- When adding a command, update README, the interface tree, capability map, tests, and related flow pages together.
+| Implemented | Command, Python function, and tests exist |
+| Verified | Covered by local tests, CLI smoke, CI, or real-service practice |
+| Planned | Keep only boundary notes; do not write operation tutorials before implementation |

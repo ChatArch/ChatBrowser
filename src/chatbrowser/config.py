@@ -15,12 +15,16 @@ class ChatbrowserConfig(BaseEnvConfig):
         """Validate schema registration without external side effects."""
 
         print(f"Testing {cls._title}...")
-        print("Schema loaded; no network test is required.")
+        print("Schema loaded; browser runtime checks are handled by `chatbrowser doctor`.")
 
-    CHATBROWSER_API_KEY = EnvField(
-        "CHATBROWSER_API_KEY",
-        desc="API key",
-        is_sensitive=True,
+    CHATBROWSER_DEFAULT_BACKEND = EnvField(
+        "CHATBROWSER_DEFAULT_BACKEND",
+        desc="Default browser backend name, for example chrome-for-testing",
+        default="chrome-for-testing",
+    )
+    CHATBROWSER_REGISTRY_HOME = EnvField(
+        "CHATBROWSER_REGISTRY_HOME",
+        desc="Optional ChatBrowser metadata root override; normally leave unset to use ChatArch home",
     )
 
 
