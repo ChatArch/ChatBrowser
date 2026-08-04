@@ -1,6 +1,6 @@
 # ChatBrowser Docs
 
-ChatBrowser is a ChatArch Python package. This documentation site should hold long-lived usage notes, a command map, a capability map, and Python interface entry points. After scaffolding, replace placeholders with behavior that is actually implemented, explored, or planned for this package.
+ChatBrowser is the ChatArch browser runtime and artifact identity package. The first release fixes the PyPI package name, `chatbrowser` CLI entry point, Python import surface, and ChatEnv discovery hook. Concrete browser runtime automation commands will be added in later versions only after the underlying capability exists.
 
 Site entry: <https://arch.gh.wzhecnu.cn/ChatBrowser/en/>
 
@@ -14,9 +14,9 @@ Site entry: <https://arch.gh.wzhecnu.cn/ChatBrowser/en/>
 
 ## Documentation Organization
 
-This template keeps only durable documentation entry points; it does not generate a plan placeholder:
+The documentation records existing entry points and boundaries:
 
-- **CLI tree**: the most direct command entry point, including the real command tree, status, and update checklist.
+- **CLI tree**: the most direct command entry point; it currently includes `--help` and `--version`.
 - **Capability map**: first-class capabilities, boundaries, and out-of-scope areas.
 - **Interface tree**: importable Python APIs behind the CLI.
 
@@ -32,7 +32,7 @@ This template keeps only durable documentation entry points; it does not generat
 
 - **Capability Map**
 
-    Review current package boundaries and avoid presenting planned work as implemented behavior.
+    Review current package boundaries and avoid presenting future browser automation work as implemented behavior.
 
     [Open Capability Map](capability-map.md)
 

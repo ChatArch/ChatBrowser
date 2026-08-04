@@ -16,7 +16,7 @@
 
 - **配置与环境**
 
-    默认接入 ChatEnv；长期、常用、跨命令共享的配置放入 `config.py`。
+    已接入 ChatEnv；后续浏览器运行时需要长期保存的配置应进入 `config.py`。
 
 </div>
 
@@ -25,11 +25,11 @@
 | 能力 | 状态 | 说明 |
 | --- | --- | --- |
 | 命令行基础入口 | 已实现 | 模板生成 Click group、`--version` 和基础测试。 |
-| ChatEnv 配置提供者 | 已实现 | 默认生成 `config.py` 和 `chatenv.configs` 入口点。 |
-| 业务命令 | 未实现 | 按当前包真实需求补充，不能在模板里伪造未来命令。 |
+| Python package identity | 已实现 | `ChatBrowser` PyPI project、`chatbrowser` module 和 `chatbrowser` CLI 入口保持一致。 |
+| ChatEnv 配置提供者 | 已实现 | 提供 `config.py` 和 `chatenv.configs` 入口点，供后续配置项扩展。 |
+| 浏览器运行时业务命令 | 未实现 | 后续按真实运行时能力补充，当前不伪造未来命令。 |
 
 ## 不在当前范围
 
-- 不生成计划类占位页。
 - 不把未实现能力写成用户可执行教程。
 - 不在 README、docs、issue、PR 评论或 CI log 中输出 secret、token、cookie 或 Authorization header。
