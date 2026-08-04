@@ -1,44 +1,92 @@
-# CLI 能力地图
+# CLI 树
 
-这篇文档是 `ChatBrowser` CLI 的简明能力地图，用来校对哪些命令已经是一等入口、哪些仍然只是边界或规划。当前版本只发布基础 identity 入口，不把未实现的浏览器自动化命令写成已可用操作。
+`chatbrowser` 当前是浏览器运行态元数据 CLI：探测 browser backend、登记 profile、登记本机 loopback CDP endpoint，并把 session endpoint 提供给上层工具。它不做平台账号语义，也不安装依赖。
 
-可导入 Python 函数映射见 [接口树](interface-tree.md)。当前包能力边界见 [能力地图](capability-map.md)。
+Python 接口映射见 [接口树](interface-tree.md)。能力边界见 [能力地图](capability-map.md)。
 
-## 顶层命令
+## 顶层
 
 ```text
 chatbrowser                  # ChatBrowser 命令行入口
-├── --help                     # 显示 CLI 帮助和已注册命令
-└── --version                  # 输出当前包版本
+├── --help                   # 显示 CLI 帮助和已注册命令
+├── --version                # 输出当前包版本
+├── doctor                   # 只读检查 ChatBrowser 与依赖状态
+├── backend                  # 探测本机 browser backend
+├── profile                  # 管理隔离 browser profile 元数据
+├── connect                  # 登记已有本机 loopback CDP endpoint，不接管浏览器
+├── disconnect               # 删除本地 session 记录，不关闭外部浏览器
+└── session                  # 读取已登记 browser session
 ```
 
-## 基础入口
+## doctor
+
+```bash
+chatbrowser doctor --output text|json
+```
+
+`doctor` 是只读命令；它报告包版本、ChatBrowser metadata home、`chatup` / `chatstyle` / `chatenv` 依赖版本，以及 `installs_dependencies=false`，明确 ChatBrowser 不承担安装职责。
+
+## backend
 
 ```text
-chatbrowser --help           # 验证命令已安装，并查看当前命令树
-chatbrowser --version        # 验证当前安装版本
+chatbrowser backend list --output text|json
+chatbrowser backend show <name> --output text|json
+chatbrowser backend resolve <name> --output text|json
 ```
 
-`--help` 和 `--version` 是当前可验证入口。新增业务命令后，应像 ChatTea 的 CLI 树一样，把命令组单独展开，并给每个命令写一行注释。
+当前识别的 backend 名称：
 
-## 未实现的业务命令
+- `chrome-for-testing`
+- `chromium`
+- `chrome`
+- `edge`
+
+这些命令只做 `PATH` 探测，不安装浏览器。缺少 backend 时应交给 ChatUp 或人工 setup 解决。
+
+## profile
 
 ```text
-chatbrowser <browser-command> # 尚未实现；后续按真实浏览器运行时能力补充
+chatbrowser profile list --output text|json
+chatbrowser profile create <name> \
+  [--path <profile-dir>] \
+  [--backend chrome-for-testing] \
+  [--label key=value] \
+  [--output text|json]
+chatbrowser profile show <name> --output text|json
+chatbrowser profile path <name> [--kind root|downloads|logs|run]
+chatbrowser profile status <name> --output text|json
 ```
 
-这里不是未来能力承诺。只有当命令、Python 函数和测试都存在时，才把它写成已实现入口。
+profile 是浏览器状态容器的别名和路径登记，不等于某个平台账号。ChatBrowser 只保存非敏感元数据：名称、路径、默认 backend、labels 和时间戳。
+
+## connect / disconnect
+
+```text
+chatbrowser connect \
+  --cdp-url http://127.0.0.1:9229 \
+  --as-session-name <session-id> \
+  [--profile <profile-name>] \
+  [--output text|json]
+
+chatbrowser disconnect <session-id> --output text|json
+```
+
+`connect` 只登记已有本机 loopback CDP endpoint（`http://127.0.0.1:<port>` / `http://localhost:<port>` / IPv6 localhost），`owned=false`；`disconnect` 只删除 ChatBrowser 本地 session 记录，不关闭外部浏览器。
+
+## session
+
+```text
+chatbrowser session list --output text|json
+chatbrowser session show <session-id> --output text|json
+chatbrowser session endpoint <session-id> --output text|json
+```
+
+`session endpoint` 是 ChatPost / Wechatsync 这类上层工具最常消费的入口。
 
 ## 状态约定
 
 | 状态 | 含义 |
 | --- | --- |
-| 已实现 | 命令、函数和测试已经存在 |
-| 已验证 | 已通过 CI、本地 smoke 或真实服务实践 |
-| 规划 / checkpoint | 只保留边界说明；实现前不要写操作教程 |
-
-## 实现合约
-
-- 每个已实现命令都要能追到 Python 函数、类或 service 层。
-- 如果命令会写远端状态，文档必须说明凭据、权限、dry-run/checkpoint 或确认边界。
-- 新增命令时，同步更新 README、接口树、能力地图、测试和相关 Flow 页面。
+| 已实现 | 命令、Python 函数和测试已经存在 |
+| 已验证 | 通过本地测试、CLI smoke、CI 或真实服务实践 |
+| 规划 | 只保留边界说明；实现前不要写操作教程 |

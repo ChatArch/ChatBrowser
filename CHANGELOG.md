@@ -1,14 +1,21 @@
 # Changelog
 
-## 2026-08-05
+## 0.1.1
 
 ### Added
 
-- 发布 `ChatBrowser` 首个真实版本 `0.1.0`，建立稳定的 PyPI 包名、Python import module、`chatbrowser` CLI 入口和 ChatEnv 配置发现入口。
-- 补齐 ChatArch MkDocs 文档站、GitHub Pages 发布链路、PyPI Trusted Publisher 发版链路和本地 package gate。
+- Add the first real ChatBrowser runtime metadata CLI: `doctor`, `backend`, `profile`, `connect`, `disconnect`, and `session`.
+- Add importable backend discovery, profile registry, session registry, path, and doctor APIs.
+- Add a non-sensitive ChatEnv schema for default backend and optional registry home.
+- Add tests covering CLI tree, JSON output, task-local ChatArch home, profile/session registry behavior, and UTF-8 docs/readme files.
 
 ### Changed
 
-- 将仓库从占位状态推进到可通过标准 ChatArch release flow 发布的 package scaffold。
+- Make ChatBrowser depend on `chatup>=0.2.1,<0.3.0` while keeping setup/install responsibilities in ChatUp.
+- Replace scaffold documentation with the real browser runtime/profile/session boundary and CLI tree.
 
-### Fixed
+## 0.1.0
+
+### Added
+
+- Publish the initial `ChatBrowser` package identity with stable PyPI project name, Python import module, `chatbrowser` CLI entry point, and ChatEnv discovery entry point.

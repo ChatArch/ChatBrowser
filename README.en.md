@@ -17,52 +17,85 @@
 
 # ChatBrowser
 
-ChatBrowser is the ChatArch browser runtime and artifact identity package. The first release fixes the package identity, CLI entry point, Python import surface, and ChatEnv discovery hook so later browser runtime capabilities have a stable installation surface.
-
+ChatBrowser is the ChatArch browser runtime foundation package. It does not own platform-account semantics and does not install system dependencies. It owns browser backend discovery, profile metadata, local loopback CDP endpoint registration, and session endpoint lookup for higher-level tools such as ChatPost and Wechatsync.
 
 Documentation entry: <https://arch.gh.wzhecnu.cn/ChatBrowser/en/>
 
-Choose documentation by scenario:
+## Boundaries
 
-| Scenario | Document |
-| --- | --- |
-| Install the package, run the CLI, and confirm it works | `docs/cli-tree.en.md` |
-| Check first-class capabilities and current boundaries | `docs/capability-map.en.md` |
-| Call package behavior directly from Python | `docs/interface-tree.md` |
+```text
+ChatUp       = setup / install / configure
+ChatBrowser  = browser backend / profile metadata / session endpoint / CDP registry
+Wechatsync   = platform adapter / auth check / draft write
+ChatPost     = post/task orchestration / multi-platform publishing workflow
+```
+
+ChatBrowser does not read, print, or migrate platform account data; browser state inside profile directories remains owned by the browser.
 
 ## Quick Start
 
 ```bash
 pip install ChatBrowser
 chatbrowser --help
-chatbrowser --version
+chatbrowser doctor --output json
+chatbrowser backend list --output json
 ```
 
-Development checks:
+Register an existing browser profile directory:
+
+```bash
+chatbrowser profile create zhihu-test \
+  --path /path/to/browser-profile \
+  --backend chrome-for-testing \
+  --output json
+
+chatbrowser profile show zhihu-test --output json
+chatbrowser profile path zhihu-test
+```
+
+Attach an already-running local loopback CDP endpoint (`http://127.0.0.1:<port>`, `http://localhost:<port>`, or IPv6 localhost) without taking ownership of the browser:
+
+```bash
+chatbrowser connect \
+  --cdp-url http://127.0.0.1:9229 \
+  --as-session-name zhihu-test-existing \
+  --profile zhihu-test \
+  --output json
+
+chatbrowser session endpoint zhihu-test-existing
+chatbrowser disconnect zhihu-test-existing
+```
+
+## Current CLI
+
+```text
+chatbrowser
+├── doctor
+├── backend
+│   ├── list
+│   ├── show <name>
+│   └── resolve <name>
+├── profile
+│   ├── list
+│   ├── create <name>
+│   ├── show <name>
+│   ├── path <name>
+│   └── status <name>
+├── connect
+├── disconnect <session-id>
+└── session
+    ├── list
+    ├── show <session-id>
+    └── endpoint <session-id>
+```
+
+## Development Checks
 
 ```bash
 pip install -e ".[dev,docs]"
 python -m pytest -q
 python -m build
+mkdocs build --strict
 ```
 
-## CLI Contract
-
-This template depends on `chatstyle>=0.1.0,<0.2.0` and `chatenv>=0.2.0,<0.3.0`. New commands should prefer:
-
-- `CommandSchema` / `CommandField` for inputs.
-- `add_interactive_option()` for the shared `-i/-I` switch.
-- `resolve_command_inputs()` for missing args, defaults, TTY behavior, and validation.
-- Generate `config.py` and a `chatenv.configs` entry point by default so the package is ChatEnv-discoverable; use `--without-chatenv-provider` only when ChatEnv integration is intentionally not needed.
-
-## Layout
-
-- `src/`: package source code
-- `tests/code-tests/`: code tests and migrated historical tests
-- `tests/cli-tests/`: real CLI tests, doc-first
-- `tests/mock-cli-tests/`: mock/fake CLI tests, doc-first
-- `docs/`: long-lived project docs built by mkdocs
-
-## Development Notes
-
-See `DEVELOP.md` and `AGENTS.md` before expanding the scaffold.
+Keep the CLI thin when adding commands: implement importable Python APIs first, then call them from Click commands.

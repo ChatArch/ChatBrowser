@@ -6,30 +6,45 @@
 
 <div class="grid cards" markdown>
 
-- **命令行入口**
+- **Backend 探测**
 
-    `chatbrowser --help` 和 `chatbrowser --version` 是默认可验证入口。
+    只读识别本机是否存在 Chrome for Testing、Chromium、Chrome、Edge 等 browser executable。
 
-- **Python 接口**
+- **Profile 元数据**
 
-    实质能力应放到可 import 的 Python 函数、类或 service 层，而不是只写在 Click 回调里。
+    登记 profile alias、路径、默认 backend 和 labels；profile 是浏览器状态容器，不等于平台账号。
+
+- **Session endpoint**
+
+    登记已有本机 loopback CDP endpoint，供上层工具读取 endpoint；默认不接管、不关闭外部浏览器。
 
 - **配置与环境**
 
-    已接入 ChatEnv；后续浏览器运行时需要长期保存的配置应进入 `config.py`。
+    通过 ChatEnv 提供 `CHATBROWSER_DEFAULT_BACKEND` 与 `CHATBROWSER_REGISTRY_HOME` schema；默认 metadata 存在 ChatArch home 下。
 
 </div>
 
-## 当前边界
+## 当前能力
 
-| 能力 | 状态 | 说明 |
-| --- | --- | --- |
-| 命令行基础入口 | 已实现 | 模板生成 Click group、`--version` 和基础测试。 |
-| Python package identity | 已实现 | `ChatBrowser` PyPI project、`chatbrowser` module 和 `chatbrowser` CLI 入口保持一致。 |
-| ChatEnv 配置提供者 | 已实现 | 提供 `config.py` 和 `chatenv.configs` 入口点，供后续配置项扩展。 |
-| 浏览器运行时业务命令 | 未实现 | 后续按真实运行时能力补充，当前不伪造未来命令。 |
+| 能力 | 状态 | 入口 | 说明 |
+| --- | --- | --- | --- |
+| 包身份 | 已实现 / 已验证 | `chatbrowser --version` | PyPI project `ChatBrowser`、module `chatbrowser`、CLI `chatbrowser` 对齐。 |
+| 只读健康检查 | 已实现 / 已验证 | `chatbrowser doctor --output json` | 报告版本、metadata home、依赖版本和 `installs_dependencies=false`。 |
+| Backend 探测 | 已实现 / 已验证 | `chatbrowser backend list` | 只查 PATH，不安装 browser。 |
+| Profile 登记 | 已实现 / 已验证 | `chatbrowser profile create/show/list/path/status` | 只保存非敏感元数据，不读取 profile 内部状态。 |
+| 外部 CDP 接入 | 已实现 / 已验证 | `chatbrowser connect` | 登记已有本机 loopback CDP endpoint，`owned=false`。 |
+| Session endpoint 读取 | 已实现 / 已验证 | `chatbrowser session endpoint` | 面向 ChatPost / Wechatsync 的集成点。 |
+| ChatEnv 配置提供者 | 已实现 / 已验证 | `chatenv` entry point | 提供默认 backend 和 registry home schema。 |
 
-## 不在当前范围
+## 不属于 ChatBrowser
 
-- 不把未实现能力写成用户可执行教程。
-- 不在 README、docs、issue、PR 评论或 CI log 中输出 secret、token、cookie 或 Authorization header。
+- 不安装 Chrome、Chromium、Chrome for Testing、Node.js、uv 或系统依赖；这些属于 ChatUp 或人工 setup。
+- 不判断知乎、公众号、掘金等平台账号是谁；这些属于 Wechatsync/ChatPost 的平台 adapter。
+- 不读取或输出 browser profile 内部的敏感状态。
+- 不发布草稿、不调度多平台任务；这些属于 ChatPost。
+
+## 安全边界
+
+- 对外 JSON/text 默认只包含 metadata、路径、backend 名称、CDP URL 和 session id。
+- `disconnect` 只删除本地 registry 记录，不杀进程、不关闭外部浏览器。
+- 同一 profile 不应在多台机器上同时写入；迁移 profile 目录应由显式后续命令或上层 workflow 处理。
