@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.3 - 2026-08-09
+
+### Added
+
+- Add a top-level `chatbrowser --tree` readback path that renders the registered browser runtime CLI tree.
+
+### Changed
+
+- Align bilingual CLI tree docs with the runtime-registered tree and explicitly keep unimplemented launch/extension commands out of the visible tree.
+
 ## 0.1.2
 
 ### Fixed

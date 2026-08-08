@@ -10,13 +10,16 @@ Python 接口映射见 [接口树](interface-tree.md)。能力边界见 [能力�
 chatbrowser                  # ChatBrowser 命令行入口
 ├── --help                   # 显示 CLI 帮助和已注册命令
 ├── --version                # 输出当前包版本
+├── --tree                   # 输出真实已注册 CLI 树
 ├── doctor                   # 只读检查 ChatBrowser 与依赖状态
 ├── backend                  # 探测本机 browser backend
 ├── profile                  # 管理隔离 browser profile 元数据
+├── session                  # 读取已登记 browser session
 ├── connect                  # 登记已有本机 loopback CDP endpoint，不接管浏览器
-├── disconnect               # 删除本地 session 记录，不关闭外部浏览器
-└── session                  # 读取已登记 browser session
+└── disconnect               # 删除本地 session 记录，不关闭外部浏览器
 ```
+
+运行 `chatbrowser --tree` 可回读真实注册树；文档中的命令树不得写入未实现的启动或 extension 子命令。
 
 ## doctor
 

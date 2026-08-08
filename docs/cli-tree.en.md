@@ -10,13 +10,16 @@ Importable APIs are mapped in [Interface Tree](interface-tree.md). Package bound
 chatbrowser                  # ChatBrowser command-line entry
 ├── --help                   # Show CLI help and registered commands
 ├── --version                # Print the package version
+├── --tree                   # Print the actual registered CLI tree
 ├── doctor                   # Read-only package and dependency check
 ├── backend                  # Discover local browser backends
 ├── profile                  # Manage isolated browser profile metadata
+├── session                  # Read registered browser sessions
 ├── connect                  # Register an existing local loopback CDP endpoint without taking ownership
-├── disconnect               # Remove a local session record without closing external browsers
-└── session                  # Read registered browser sessions
+└── disconnect               # Remove a local session record without closing external browsers
 ```
+
+Run `chatbrowser --tree` to read back the registered tree. This page must not list unimplemented launch or extension subcommands as available commands.
 
 ## doctor
 
