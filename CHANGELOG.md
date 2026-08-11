@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.4 - 2026-08-12
+
+### Changed
+
+- Enable the MkDocs Material emoji renderer (`pymdownx.emoji` with Material `twemoji`/`to_svg`) for the bilingual public docs site.
+- Derive Preview Docs public URLs from `mkdocs.yml` `site_url` instead of duplicating the domain path.
+- Harden the tag-driven Trusted Publishing workflow with package-version, default-branch, and PyPI exact-version guards.
+- Add CI smoke checks for installed `chatbrowser --version` and `chatbrowser --tree`.
+
 ## 0.1.3 - 2026-08-09
 
 ### Added
