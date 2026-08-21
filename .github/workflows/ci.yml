@@ -24,5 +24,6 @@ jobs:
       - run: python -m pytest -q
       - run: chatbrowser --version
       - run: chatbrowser --tree
+      - run: chatbrowser --tree-brief
       - run: python -m build
       - run: mkdocs build --strict

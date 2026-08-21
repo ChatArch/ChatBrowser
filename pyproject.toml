@@ -12,8 +12,8 @@ license = "MIT"
 dependencies = [
     "click>=8.0",
     "chatup>=0.2.1,<0.3.0",
-    "chatstyle>=0.1.0,<0.2.0",
-    "chatenv>=0.2.0,<0.3.0",
+    "chatstyle>=0.2.0,<0.3.0",
+    "chatenv>=0.2.10,<0.3.0",
 ]
 authors = [{name = "ChatArch", email = "1073853456@qq.com"}]
 keywords = ["chatbrowser", "chatarch", "cli"]

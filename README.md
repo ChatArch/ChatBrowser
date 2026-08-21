@@ -37,6 +37,8 @@ ChatBrowser 不读取、打印或迁移平台账号数据；profile 目录里的
 ```bash
 pip install ChatBrowser
 chatbrowser --help
+chatbrowser --tree
+chatbrowser --tree-brief
 chatbrowser doctor --output json
 chatbrowser backend list --output json
 ```
@@ -67,6 +69,8 @@ chatbrowser disconnect zhihu-test-existing
 ```
 
 ## 当前 CLI
+
+顶层树回读由 ChatStyle 共享 Click runtime 生成：`chatbrowser --tree` 默认显示参数签名，`chatbrowser --tree-brief` 保留命令节点和描述但省略参数签名。下面是简化概览。
 
 ```text
 chatbrowser
