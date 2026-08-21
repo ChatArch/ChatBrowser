@@ -10,7 +10,8 @@ Python 接口映射见 [接口树](interface-tree.md)。能力边界见 [能力�
 chatbrowser                  # ChatBrowser 命令行入口
 ├── --help                   # 显示 CLI 帮助和已注册命令
 ├── --version                # 输出当前包版本
-├── --tree                   # 输出真实已注册 CLI 树
+├── --tree                   # 输出真实已注册 CLI 树（默认包含参数签名）
+├── --tree-brief             # 输出命令节点和描述（省略参数签名）
 ├── doctor                   # 只读检查 ChatBrowser 与依赖状态
 ├── backend                  # 探测本机 browser backend
 ├── profile                  # 管理隔离 browser profile 元数据
@@ -19,7 +20,7 @@ chatbrowser                  # ChatBrowser 命令行入口
 └── disconnect               # 删除本地 session 记录，不关闭外部浏览器
 ```
 
-运行 `chatbrowser --tree` 可回读真实注册树；文档中的命令树不得写入未实现的启动或 extension 子命令。
+顶层选项使用 ChatStyle 共享 Click tree runtime。运行 `chatbrowser --tree` 可回读包含参数签名的真实注册树；运行 `chatbrowser --tree-brief` 可保留命令节点和描述并省略参数签名。两种输出的根节点都是 `chatbrowser`。文档中的命令树不得写入未实现的启动或 extension 子命令。
 
 ## doctor
 
@@ -27,7 +28,7 @@ chatbrowser                  # ChatBrowser 命令行入口
 chatbrowser doctor --output text|json
 ```
 
-`doctor` 是只读命令；它报告包版本、ChatBrowser metadata home、`chatup` / `chatstyle` / `chatenv` 依赖版本，以及 `installs_dependencies=false`，明确 ChatBrowser 不承担安装职责。
+`doctor` 是只读命令；它报告包版本、ChatBrowser metadata home、`chatstyle` / `chatenv` 依赖版本、可选的 ChatUp 检测结果，以及 `installs_dependencies=false`，明确 ChatBrowser 不承担安装职责。ChatUp 不再是硬依赖，因为其当前发布版本要求 ChatStyle `<0.2.0`。
 
 ## backend
 

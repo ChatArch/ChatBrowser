@@ -13,6 +13,14 @@ def test_publish_workflow_uses_oidc_with_release_guards():
     assert "environment: pypi" not in workflow
 
 
+def test_ci_smokes_installed_version_and_tree_options():
+    workflow = Path(".github/workflows/ci.yml").read_text(encoding="utf-8")
+
+    assert "chatbrowser --version" in workflow
+    assert "chatbrowser --tree" in workflow
+    assert "chatbrowser --tree-brief" in workflow
+
+
 def test_preview_workflow_derives_public_url_from_site_url():
     workflow = Path(".github/workflows/preview.yaml").read_text(encoding="utf-8")
 

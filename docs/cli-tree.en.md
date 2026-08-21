@@ -10,7 +10,8 @@ Importable APIs are mapped in [Interface Tree](interface-tree.md). Package bound
 chatbrowser                  # ChatBrowser command-line entry
 ├── --help                   # Show CLI help and registered commands
 ├── --version                # Print the package version
-├── --tree                   # Print the actual registered CLI tree
+├── --tree                   # Print the registered CLI tree with parameter signatures
+├── --tree-brief             # Print command nodes and descriptions without signatures
 ├── doctor                   # Read-only package and dependency check
 ├── backend                  # Discover local browser backends
 ├── profile                  # Manage isolated browser profile metadata
@@ -19,7 +20,7 @@ chatbrowser                  # ChatBrowser command-line entry
 └── disconnect               # Remove a local session record without closing external browsers
 ```
 
-Run `chatbrowser --tree` to read back the registered tree. This page must not list unimplemented launch or extension subcommands as available commands.
+The top-level options use ChatStyle's shared Click tree runtime. Run `chatbrowser --tree` to read back the registered tree with parameter signatures, or `chatbrowser --tree-brief` to keep command nodes and descriptions while omitting signatures. Both outputs use `chatbrowser` as the root. This page must not list unimplemented launch or extension subcommands as available commands.
 
 ## doctor
 
@@ -27,7 +28,7 @@ Run `chatbrowser --tree` to read back the registered tree. This page must not li
 chatbrowser doctor --output text|json
 ```
 
-`doctor` is read-only. It reports the package version, ChatBrowser metadata home, `chatup` / `chatstyle` / `chatenv` dependency versions, and `installs_dependencies=false` to make the setup boundary explicit.
+`doctor` is read-only. It reports the package version, ChatBrowser metadata home, `chatstyle` / `chatenv` dependency versions, optional ChatUp detection, and `installs_dependencies=false` to make the setup boundary explicit. ChatUp is no longer a hard dependency because its current releases require ChatStyle `<0.2.0`.
 
 ## backend
 

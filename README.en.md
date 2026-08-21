@@ -37,6 +37,8 @@ ChatBrowser does not read, print, or migrate platform account data; browser stat
 ```bash
 pip install ChatBrowser
 chatbrowser --help
+chatbrowser --tree
+chatbrowser --tree-brief
 chatbrowser doctor --output json
 chatbrowser backend list --output json
 ```
@@ -67,6 +69,8 @@ chatbrowser disconnect zhihu-test-existing
 ```
 
 ## Current CLI
+
+Top-level tree readback comes from ChatStyle's shared Click runtime: `chatbrowser --tree` includes parameter signatures by default, while `chatbrowser --tree-brief` keeps command nodes and descriptions but omits signatures. The tree below is a simplified overview.
 
 ```text
 chatbrowser

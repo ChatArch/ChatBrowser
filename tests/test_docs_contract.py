@@ -21,3 +21,5 @@ def test_cli_tree_docs_remain_bilingual():
     assert Path("docs/cli-tree.en.md").exists()
     assert "chatbrowser --tree" in Path("docs/cli-tree.md").read_text(encoding="utf-8")
     assert "chatbrowser --tree" in Path("docs/cli-tree.en.md").read_text(encoding="utf-8")
+    assert "chatbrowser --tree-brief" in Path("docs/cli-tree.md").read_text(encoding="utf-8")
+    assert "chatbrowser --tree-brief" in Path("docs/cli-tree.en.md").read_text(encoding="utf-8")
