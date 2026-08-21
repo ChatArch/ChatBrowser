@@ -28,7 +28,7 @@ chatbrowser                  # ChatBrowser 命令行入口
 chatbrowser doctor --output text|json
 ```
 
-`doctor` 是只读命令；它报告包版本、ChatBrowser metadata home、`chatup` / `chatstyle` / `chatenv` 依赖版本，以及 `installs_dependencies=false`，明确 ChatBrowser 不承担安装职责。
+`doctor` 是只读命令；它报告包版本、ChatBrowser metadata home、`chatstyle` / `chatenv` 依赖版本、可选的 ChatUp 检测结果，以及 `installs_dependencies=false`，明确 ChatBrowser 不承担安装职责。ChatUp 不再是硬依赖，因为其当前发布版本要求 ChatStyle `<0.2.0`。
 
 ## backend
 

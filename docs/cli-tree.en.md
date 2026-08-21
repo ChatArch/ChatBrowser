@@ -28,7 +28,7 @@ The top-level options use ChatStyle's shared Click tree runtime. Run `chatbrowse
 chatbrowser doctor --output text|json
 ```
 
-`doctor` is read-only. It reports the package version, ChatBrowser metadata home, `chatup` / `chatstyle` / `chatenv` dependency versions, and `installs_dependencies=false` to make the setup boundary explicit.
+`doctor` is read-only. It reports the package version, ChatBrowser metadata home, `chatstyle` / `chatenv` dependency versions, optional ChatUp detection, and `installs_dependencies=false` to make the setup boundary explicit. ChatUp is no longer a hard dependency because its current releases require ChatStyle `<0.2.0`.
 
 ## backend
 

@@ -23,7 +23,7 @@ def parse_json_output(result):
 def test_pyproject_declares_runtime_dependency_bounds():
     text = (PROJECT_ROOT / "pyproject.toml").read_text(encoding="utf-8")
 
-    assert '"chatup>=0.2.1,<0.3.0"' in text
+    assert '"chatup' not in text
     assert '"chatstyle>=0.2.0,<0.3.0"' in text
     assert '"chatenv>=0.2.10,<0.3.0"' in text
 
